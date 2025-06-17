@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type WordDisplayProps = {
   word: string;
@@ -10,18 +10,23 @@ const WordDisplay = ({word, typed, ratio}: WordDisplayProps) => {
   const [visible, setVisible] = useState(false);
   const [startFromLeft, setStartFromLeft] = useState(true);
   const [arrived, setArrived] = useState(false);
+  const [bounced, setBounced] = useState<number[]>([]);
+  const prevTypedLength = useRef(0);
 
   useEffect(() => {
     if(!word){
       setVisible(false);
       setArrived(false);
+      setBounced([]);
+      prevTypedLength.current = 0;
       return;
     }
 
     setStartFromLeft(Math.random() < 0.5);
     setVisible(false);
     setArrived(false);
-
+    setBounced([]);
+    prevTypedLength.current = 0;
     const moveTimeout = setTimeout(() => setVisible(true), 50);
     const appearTimeout = setTimeout(() => setArrived(true), 1000);
     return () => {
@@ -30,9 +35,18 @@ const WordDisplay = ({word, typed, ratio}: WordDisplayProps) => {
     };
   }, [word]);
 
+  // Animation de rebond sur chaque lettre validée
+  useEffect(() => {
+    if (typed.length > prevTypedLength.current) {
+      setBounced((prev) => [...prev, typed.length - 1]);
+    }
+    prevTypedLength.current = typed.length;
+  }, [typed]);
+
   // Position verticale de la ligne blanche (en px ou %)
   const topPosition = `calc(100% - ${ratio}%)`;
 
+  console.log(bounced);
 
   return (
     <div
@@ -51,16 +65,16 @@ const WordDisplay = ({word, typed, ratio}: WordDisplayProps) => {
     >
       {word.split("").map((char, index) => (
         <span
-        className="transition-all duration-700 ease-in"
           key={index}
-          style={{
-            opacity: arrived ? 1 : 0,
-            color:
-              index < typed.length
-                ? "#16a34a"
-                : index === typed.length
-                ? "black"
-                : "#9ca3af",
+          className={
+            index < typed.length
+              ? `text-green-600 font-extrabold ${bounced.includes(index) ? "animate-char-bounce" : ""}`
+              : index === typed.length
+              ? "text-black"
+              : "text-gray-400"
+          }
+          onAnimationEnd={() => {
+            setBounced((prev) => prev.filter(i => i !== index));
           }}
         >
           {char}

@@ -22,7 +22,7 @@ export default function useGameLogic() {
   // Lance le round après le décompte
   const startTyping = useCallback(() => {
     setGameState("typing");
-    setCurrentWord(WORDS[0]);
+    setCurrentWord(WORDS[0].toUpperCase());
     setTypedText("");
     setWordIndex(0);
   }, []);
@@ -31,7 +31,7 @@ export default function useGameLogic() {
     (e: KeyboardEvent) => {
       if(gameState !== "typing") return;
       const nextChar = currentWord[typedText.length];
-      if (e.key.toLowerCase() === nextChar) {
+      if (e.key.toUpperCase() === nextChar) {
          setTypedText((prev) => prev + e.key.toLowerCase());
       }
     },
@@ -44,7 +44,7 @@ export default function useGameLogic() {
   }, [handleKeyDown]);
 
   useEffect(() => {
-    if (gameState === "typing" && typedText === currentWord && currentWord !== "") {
+    if (gameState === "typing" && typedText.toUpperCase() === currentWord && currentWord !== "") {
       setZoneRatio((prev) => {
         const newRatio = Math.min(prev + 5, 100);
         if (newRatio === 100){
@@ -53,7 +53,7 @@ export default function useGameLogic() {
           if (wordIndex + 1 < WORDS.length) {
             setTimeout(() => {
               setWordIndex(wordIndex + 1);
-              setCurrentWord(WORDS[wordIndex + 1]);
+              setCurrentWord(WORDS[wordIndex + 1].toUpperCase());
               setTypedText("");
             }, 700);
           }else {

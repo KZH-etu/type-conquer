@@ -19,7 +19,6 @@ const BattleTypePage = () => {
   return (
     <div className="h-screen w-full flex relative bg-gray-100 overflow-hidden">
       <ProgressBar ratio={zoneRatio}/>
-      <WordDisplay word={currentWord} typed={typedText} ratio={zoneRatio} />
 
       {/* Affiche le mot seulement si pas de countdown ni de modal */}
       {!showCountdown && !isGameOver && (
