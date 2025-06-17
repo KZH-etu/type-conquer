@@ -36,7 +36,7 @@ const WordDisplay = ({word, typed, ratio}: WordDisplayProps) => {
 
   return (
     <div
-      className="absolute bg-white px-6 py-3 text-6xl font-bold border-black border-2"
+      className="absolute bg-white px-6 py-3 text-6xl font-bold shadow-xl border-black border-2"
       style={{
         top: topPosition,
         left: visible ? "50%" : startFromLeft ? "-150%" : "150%",
@@ -44,7 +44,6 @@ const WordDisplay = ({word, typed, ratio}: WordDisplayProps) => {
         transition: "left 0.7s ease",
         whiteSpace: "nowrap",
         borderRadius: "0.3rem",
-        boxShadow: "0 0 8px rgba(0,0,0,0.2)",
         fontFamily: "monospace",
         userSelect: "none",
         pointerEvents: "none",
